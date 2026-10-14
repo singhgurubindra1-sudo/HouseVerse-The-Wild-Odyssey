@@ -1,0 +1,31 @@
+{
+  "name": "wildlands",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wildlands - a living house ecosystem. Gamified onboarding for the nine houses.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "seed:sql": "tsx scripts/generate-seed-sql.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.7.0",
+    "@supabase/supabase-js": "2.57.4",
+    "next": "15.5.27",
+    "react": "19.1.9",
+    "react-dom": "19.1.9",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.18.6",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "tailwindcss": "4.1.13",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2"
+  }
+}
