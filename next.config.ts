@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "5mb",
       // Cloud editors (GitHub Codespaces, Gitpod) serve the site from a different
       // address than the server sees, so Next.js would block every form. Allow them.
-      allowedOrigins: ["*.app.github.dev", "*.github.dev", "*.gitpod.io", "localhost:3000"],
+      allowedOrigins: ["**.github.dev", "**.gitpod.io", "**.app.github.dev", "localhost:3000"],
     },
   },
 };
