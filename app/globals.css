@@ -1,38 +1,342 @@
 @import "tailwindcss";
 
 @theme {
-  --color-forest: #2d6a3e;
-  --color-forest-dark: #1f4d2c;
+  --color-forest: #1f6b40;
+  --color-forest-dark: #134a2b;
   --color-leaf: #9ccf6a;
   --color-leaf-soft: #e9f3dc;
   --color-cream: #faf6ea;
   --color-sand: #f3ecd8;
   --color-sun: #f6c445;
-  --color-ink: #1d2a20;
+  --color-ink: #16261b;
   --color-sky: #d6ebf3;
   --color-rose: #f7d9d6;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+/* =====================================================================
+   Liquid glass design system
+   Frosted, light-bending panels floating over a living forest backdrop.
+   ===================================================================== */
+
+:root {
+  --glass-bg: rgb(255 255 255 / 0.34);
+  --glass-bg-strong: rgb(255 255 255 / 0.55);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glass-edge: rgb(255 255 255 / 0.9);
+  --glass-blur: 22px;
+  --glass-shadow: 0 1px 0 0 rgb(255 255 255 / 0.85) inset, 0 -1px 0 0 rgb(255 255 255 / 0.25) inset, 0 0 0 1px rgb(255 255 255 / 0.18) inset,
+    0 24px 48px -18px rgb(14 52 30 / 0.38), 0 8px 18px -10px rgb(14 52 30 / 0.25);
+  --tint-green: rgb(31 107 64 / 0.78);
+}
+
 html {
-  background: var(--color-cream);
   color: var(--color-ink);
+  background: #cfe9da;
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
   min-height: 100dvh;
+  background: transparent;
+}
+
+/* ---------- Living backdrop: drifting aurora blobs behind the glass ---------- */
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
   background:
-    radial-gradient(1200px 400px at 50% -100px, #eef6e3 0%, transparent 70%),
-    var(--color-cream);
+    radial-gradient(120% 80% at 10% 0%, #e7f7df 0%, transparent 55%),
+    radial-gradient(90% 70% at 100% 10%, #d3ecf8 0%, transparent 60%),
+    radial-gradient(100% 80% at 50% 110%, #f8ecc9 0%, transparent 60%),
+    linear-gradient(160deg, #cdeedb 0%, #bfe3e6 45%, #e4f0cf 100%);
+}
+.scene-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.7;
+  animation: drift 26s ease-in-out infinite alternate;
+}
+.scene-bg .b1 { width: 46vmax; height: 46vmax; left: -12vmax; top: -10vmax; background: radial-gradient(circle, #6fcf8e, transparent 65%); }
+.scene-bg .b2 { width: 40vmax; height: 40vmax; right: -10vmax; top: 10vh; background: radial-gradient(circle, #72c6e0, transparent 65%); animation-duration: 32s; }
+.scene-bg .b3 { width: 38vmax; height: 38vmax; left: 30vw; bottom: -14vmax; background: radial-gradient(circle, #f6c445, transparent 62%); opacity: 0.55; animation-duration: 38s; }
+.scene-bg .b4 { width: 26vmax; height: 26vmax; left: 8vw; bottom: 8vh; background: radial-gradient(circle, #f2a7c3, transparent 65%); opacity: 0.45; animation-duration: 30s; }
+.scene-bg .leaf-grid {
+  position: absolute;
+  inset: 45% -20% -40% -20%;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.35) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(600px) rotateX(62deg);
+  transform-origin: 50% 0;
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 60%, transparent);
+  opacity: 0.55;
+}
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6vw, 4vh, 0) scale(1.12); }
+  100% { transform: translate3d(-4vw, 8vh, 0) scale(0.95); }
 }
 
 :focus-visible {
   outline: 3px solid var(--color-sun);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-/* A tree sprouting when a quest is approved. */
+/* ---------- Glass surfaces ---------- */
+.glass,
+.card {
+  position: relative;
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.22) 100%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.5rem;
+  box-shadow: var(--glass-shadow);
+  isolation: isolate;
+}
+/* Specular sheen across the top edge: what makes glass look "liquid". */
+.card::before,
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0) 38%),
+    radial-gradient(120% 60% at 0% 0%, rgb(255 255 255 / 0.35), transparent 50%);
+  z-index: -1;
+}
+
+/* ---------- 3D tilt: elements with data-tilt lean toward the pointer ---------- */
+[data-tilt] {
+  --rx: 0deg;
+  --ry: 0deg;
+  --gx: 50%;
+  --gy: 0%;
+  transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s;
+  will-change: transform;
+}
+[data-tilt].is-tilting {
+  transition: transform 0.08s linear, box-shadow 0.35s;
+  box-shadow: var(--glass-shadow), 0 40px 60px -24px rgb(14 52 30 / 0.45);
+}
+[data-tilt]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--gx) var(--gy), rgb(255 255 255 / 0.45), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+[data-tilt].is-tilting::after { opacity: 1; }
+[data-tilt] .pop { transform: translateZ(40px); }
+[data-tilt] .pop-sm { transform: translateZ(22px); }
+
+/* ---------- Buttons: glossy glass capsules with real depth ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.62rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-height: 44px;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 -2px 6px rgb(0 0 0 / 0.08) inset, 0 10px 22px -10px rgb(14 52 30 / 0.5), 0 2px 0 rgb(14 52 30 / 0.12);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s, background 0.2s;
+  overflow: hidden;
+  isolation: isolate;
+  white-space: nowrap;
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px 50% 1px;
+  border-radius: 999px 999px 40% 40% / 999px 999px 30% 30%;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0));
+  pointer-events: none;
+  z-index: -1;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 -2px 6px rgb(0 0 0 / 0.08) inset, 0 16px 28px -12px rgb(14 52 30 / 0.55); }
+.btn:active { transform: translateY(1px) scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-primary { background: linear-gradient(180deg, rgb(52 150 92 / 0.92), rgb(23 92 52 / 0.92)); color: white; border-color: rgb(190 255 210 / 0.55); text-shadow: 0 1px 1px rgb(0 0 0 / 0.25); }
+.btn-primary::before { background: linear-gradient(180deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0)); }
+.btn-leaf { background: linear-gradient(180deg, rgb(196 236 150 / 0.85), rgb(140 200 90 / 0.85)); color: var(--color-ink); }
+.btn-ghost { background: rgb(255 255 255 / 0.35); color: var(--color-ink); }
+.btn-danger { background: linear-gradient(180deg, rgb(228 104 86 / 0.92), rgb(178 54 40 / 0.92)); color: white; }
+.btn-sm { padding: 0.32rem 0.85rem; min-height: 36px; font-size: 0.85rem; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid rgb(255 255 255 / 0.75);
+  border-radius: 999px;
+  padding: 0.12rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgb(255 255 255 / 0.45);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.8) inset, 0 4px 10px -6px rgb(14 52 30 / 0.4);
+}
+
+.field {
+  width: 100%;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 0.9rem;
+  padding: 0.62rem 0.85rem;
+  background: rgb(255 255 255 / 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 6px rgb(14 52 30 / 0.12) inset, 0 1px 0 rgb(255 255 255 / 0.7);
+  font-size: 1rem;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+.field:focus { outline: none; background: rgb(255 255 255 / 0.8); box-shadow: 0 0 0 3px rgb(52 150 92 / 0.45), 0 2px 6px rgb(14 52 30 / 0.1) inset; }
+.label { display: block; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+
+/* Tinted glass versions of the old solid colour fills (unlayered, so they win over utilities). */
+.bg-white { background-color: rgb(255 255 255 / 0.5); }
+.bg-cream { background-color: rgb(255 255 255 / 0.3); }
+.bg-sand { background-color: rgb(246 230 190 / 0.55); }
+.bg-leaf-soft { background-color: rgb(206 240 190 / 0.5); }
+.bg-leaf { background-color: rgb(170 222 120 / 0.6); }
+.bg-rose { background-color: rgb(255 196 190 / 0.55); }
+.bg-sky { background-color: rgb(190 228 248 / 0.55); }
+.bg-sun { background-color: rgb(250 210 90 / 0.75); }
+.bg-\[\#fff1c9\] { background-color: rgb(255 236 170 / 0.55); }
+.border-ink\/80, .border-ink\/70, .border-ink\/40 { border-color: rgb(255 255 255 / 0.75); }
+.border-ink\/30, .border-ink\/25, .border-ink\/20, .border-ink\/15 { border-color: rgb(255 255 255 / 0.6); }
+.border-ink\/10 { border-color: rgb(22 38 27 / 0.08); }
+
+.glass-head { background: rgb(31 107 64 / 0.72); color: white; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.glass-row:nth-child(odd) { background: rgb(255 255 255 / 0.28); }
+.glass-row:nth-child(even) { background: rgb(255 255 255 / 0.12); }
+
+/* ---------- 3D forest diorama ---------- */
+.diorama {
+  --px: 0;
+  --py: 0;
+  perspective: 1400px;
+}
+.diorama-stage {
+  position: relative;
+  transform: rotateX(calc(6deg + var(--py) * -5deg)) rotateY(calc(var(--px) * 7deg));
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 1.75rem;
+}
+.diorama.is-tilting .diorama-stage { transition: transform 0.1s linear; }
+.diorama-window {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.75rem 1.75rem 0.5rem 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.85);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset;
+}
+.diorama-window::after {
+  /* glass pane reflection over the scene */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgb(255 255 255 / 0.35) 0%, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.15) 100%);
+}
+.diorama-soil {
+  /* the slab of earth under the forest, so it reads as a 3D island */
+  height: 26px;
+  margin: 0 10px;
+  border-radius: 0 0 1.5rem 1.5rem;
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.05) 0 2px, transparent 2px 14px),
+    linear-gradient(180deg, #8a5a33 0%, #6b4426 55%, #4f311b 100%);
+  transform: rotateX(-35deg);
+  transform-origin: top;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.25) inset;
+}
+.diorama-shadow {
+  height: 30px;
+  margin: -8px 6% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(14 52 30 / 0.35), transparent);
+  filter: blur(6px);
+}
+/* Parallax layers inside the SVG move at different speeds for depth. */
+.layer-far { transform: translate(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -4px)); transition: transform 0.4s ease-out; }
+.layer-mid { transform: translate(calc(var(--px, 0) * -18px), calc(var(--py, 0) * -6px)); transition: transform 0.4s ease-out; }
+.layer-near { transform: translate(calc(var(--px, 0) * 12px), calc(var(--py, 0) * 5px)); transition: transform 0.4s ease-out; }
+
+/* ---------- 3D ring of the nine forests (landing page) ---------- */
+.ring-scene {
+  --panel-w: 230px;
+  --radius: 330px;
+  position: relative;
+  height: 300px;
+  perspective: 1300px;
+  perspective-origin: 50% 30%;
+}
+.wl-ring {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  width: var(--panel-w);
+  height: 170px;
+  margin-left: calc(var(--panel-w) / -2);
+  transform-style: preserve-3d;
+  transform: rotateX(-8deg) rotateY(var(--spin, 0deg));
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.wl-ring.autoplay { animation: ring-spin 48s linear infinite; }
+.ring-scene:hover .wl-ring.autoplay,
+.ring-scene:focus-within .wl-ring.autoplay { animation-play-state: paused; }
+@keyframes ring-spin { from { transform: rotateX(-8deg) rotateY(0deg); } to { transform: rotateX(-8deg) rotateY(-360deg); } }
+.ring-panel {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(var(--angle)) translateZ(var(--radius));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ring-panel * {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ring-floor {
+  position: absolute;
+  left: 50%;
+  top: 205px;
+  width: 640px;
+  height: 120px;
+  margin-left: -320px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(14 52 30 / 0.28), transparent);
+  filter: blur(8px);
+}
+@media (max-width: 640px) {
+  .ring-scene { --panel-w: 160px; --radius: 220px; height: 240px; }
+  .wl-ring { height: 128px; top: 30px; }
+  .ring-floor { top: 160px; width: 420px; margin-left: -210px; }
+}
+
+/* ---------- Motion ---------- */
 @keyframes sprout {
   0% { transform: scale(0); opacity: 0; }
   60% { transform: scale(1.25); opacity: 1; }
@@ -41,11 +345,12 @@ body {
 .sprout {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: sprout 1.2s cubic-bezier(.2,.9,.3,1.2) both;
+  animation: sprout 1.2s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
 .forest-item { cursor: pointer; }
-.forest-item:hover, .forest-item:focus-visible { filter: brightness(1.12) drop-shadow(0 0 4px #f6c445); outline: none; }
+.forest-item:hover,
+.forest-item:focus-visible { filter: brightness(1.12) drop-shadow(0 0 4px #f6c445); outline: none; }
 
 @keyframes walk {
   0%, 100% { transform: translateX(0); }
@@ -53,60 +358,32 @@ body {
 }
 .legend-walk > * { animation: walk 4s ease-in-out infinite; }
 
+/* Pages and cards rise up out of the screen. */
 @keyframes rise {
-  from { transform: translateY(8px); opacity: 0; }
+  from { transform: perspective(900px) rotateX(14deg) translateY(18px); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
-.rise { animation: rise .5s ease-out both; }
+.rise { animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; transform-origin: 50% 100%; }
+
+/* Onboarding story cards turn like pages in 3D. */
+@keyframes flip-in {
+  from { transform: perspective(1100px) rotateY(-28deg) translateZ(-60px); opacity: 0; }
+  to { transform: perspective(1100px) rotateY(0) translateZ(0); opacity: 1; }
+}
+.flip-in { animation: flip-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; transform-origin: 0% 50%; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float { animation: float 6s ease-in-out infinite; }
+
+/* Phones and older browsers without blur get a more solid pane so text stays readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .card, .glass { background: rgb(255 255 255 / 0.82); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .sprout, .legend-walk > *, .rise { animation: none !important; }
+  .sprout, .legend-walk > *, .rise, .flip-in, .float, .scene-bg .blob, .wl-ring.autoplay { animation: none !important; }
+  [data-tilt], .diorama-stage, .layer-far, .layer-mid, .layer-near { transform: none !important; }
 }
-
-/* Shared "chunky card" look from the Wildlands guide. */
-.card {
-  background: #fffdf6;
-  border: 2px solid rgb(29 42 32 / 0.85);
-  border-radius: 1rem;
-  box-shadow: 0 3px 0 rgb(0 0 0 / 0.12);
-}
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
-  border: 2px solid var(--color-ink);
-  border-radius: 999px;
-  padding: .6rem 1.15rem;
-  font-weight: 700;
-  font-size: .95rem;
-  box-shadow: 0 3px 0 rgb(0 0 0 / 0.2);
-  transition: transform .08s, box-shadow .08s, background .15s;
-  min-height: 44px;
-}
-.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgb(0 0 0 / 0.2); }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn-primary { background: var(--color-forest); color: white; }
-.btn-primary:hover { background: var(--color-forest-dark); }
-.btn-leaf { background: var(--color-leaf); color: var(--color-ink); }
-.btn-ghost { background: white; color: var(--color-ink); }
-.btn-danger { background: #c84a3a; color: white; }
-.btn-sm { padding: .3rem .8rem; min-height: 36px; font-size: .85rem; }
-
-.pill {
-  display: inline-flex; align-items: center; gap: .3rem;
-  border: 1.5px solid var(--color-ink);
-  border-radius: 999px;
-  padding: .1rem .6rem;
-  font-size: .78rem;
-  font-weight: 700;
-  background: white;
-}
-
-.field {
-  width: 100%;
-  border: 2px solid rgb(29 42 32 / .35);
-  border-radius: .75rem;
-  padding: .6rem .8rem;
-  background: white;
-  font-size: 1rem;
-}
-.field:focus { border-color: var(--color-forest); outline: none; box-shadow: 0 0 0 3px rgb(156 207 106 / .5); }
-.label { display: block; font-weight: 700; font-size: .9rem; margin-bottom: .3rem; }

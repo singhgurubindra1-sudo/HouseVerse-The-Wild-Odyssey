@@ -55,10 +55,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ handle
 
   return (
     <div className="space-y-6">
-      <section className="card overflow-hidden" style={{ borderColor: color }}>
-        <div className="h-3" style={{ background: `linear-gradient(90deg, ${color}, ${house?.colorAccent ?? "#9ccf6a"})` }} />
-        <div className="flex flex-wrap items-center gap-5 p-6">
-          <Avatar profile={profile} size={88} />
+      <section className="card rise overflow-hidden">
+        <div className="h-24 sm:h-28" style={{ background: `linear-gradient(120deg, ${color}cc, ${house?.colorAccent ?? "#9ccf6a"}99)` }} aria-hidden />
+        <div className="-mt-14 flex flex-wrap items-end gap-5 p-6 pt-0">
+          <span data-tilt="18" className="rounded-full">
+            <Avatar profile={profile} size={104} />
+          </span>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Habitat Card</p>
             <h1 className="text-3xl font-black">{profile.name}</h1>
@@ -77,7 +79,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ handle
           </div>
           {isMe && <ShareButton path={`/u/${profile.handle}`} title={`${profile.name}'s Habitat Card on Wildlands`} />}
         </div>
-        <div className="border-t-2 border-ink/10 px-6 py-4">
+        <div className="border-t border-white/50 px-6 py-4">
           <div className="mb-1 flex justify-between text-sm">
             <span className="font-bold">{next ? `${next.min - profile.totalSeeds} Seeds to ${next.title}` : "Highest rank reached!"}</span>
             <span className="hidden text-ink/60 sm:inline">{RANKS.map((r) => r.title).join(" → ")}</span>
@@ -98,7 +100,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ handle
             🌳 {isMe ? "Trees I planted" : `Trees ${profile.name.split(" ")[0]} planted`}
           </h2>
           {house && (
-            <div className="overflow-hidden rounded-xl border-2 border-ink/70">
+            <div data-tilt="6" className="overflow-hidden rounded-2xl border border-white/80 shadow-lg">
               <ForestSvg
                 houseId={house.id}
                 houseName={house.name}

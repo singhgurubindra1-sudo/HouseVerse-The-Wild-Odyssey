@@ -18,18 +18,23 @@ export async function SiteHeader() {
   return (
     <>
       {repo.mode === "demo" && (
-        <div className="bg-ink px-4 py-1.5 text-center text-xs text-cream">
-          🧪 Demo mode: sample data held in memory. Connect Supabase for permanent data (see README).
+        <div className="px-3 pt-2 text-center">
+          <p className="pill mx-auto inline-flex text-[11px] font-semibold sm:text-xs">
+            🧪 Demo mode: sample data held in memory. Connect Supabase for permanent data (see README).
+          </p>
         </div>
       )}
-      <header className="sticky top-0 z-30 border-b-2 border-ink/80 bg-cream/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
+      <header className="sticky top-2 z-30 mx-auto max-w-6xl px-3 pt-2">
+        <div className="glass flex items-center gap-3 rounded-2xl px-4 py-2">
           <Link href="/" className="flex items-center gap-2 text-xl font-extrabold text-forest">
-            <span aria-hidden className="text-2xl">🌳</span> Wildlands
+            <span aria-hidden className="float text-2xl">
+              🌳
+            </span>{" "}
+            Wildlands
           </Link>
-          <nav aria-label="Main" className="ml-4 hidden gap-1 md:flex">
+          <nav aria-label="Main" className="ml-3 hidden gap-1 md:flex">
             {links.map((l) => (
-              <Link key={l.href + l.label} href={l.href} className="rounded-full px-3 py-1.5 text-sm font-semibold hover:bg-leaf-soft">
+              <Link key={l.href + l.label} href={l.href} className="rounded-full px-3 py-1.5 text-sm font-semibold transition hover:bg-white/50 hover:shadow-sm">
                 {l.label}
               </Link>
             ))}
@@ -56,12 +61,12 @@ export async function SiteHeader() {
           </div>
         </div>
       </header>
-      {/* Phone navigation: thumb-friendly bar at the bottom of the screen. */}
-      <nav aria-label="Main (mobile)" className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-ink/80 bg-cream/95 backdrop-blur md:hidden">
-        <ul className="mx-auto flex max-w-lg justify-around">
+      {/* Phone navigation: a floating glass dock at the bottom of the screen. */}
+      <nav aria-label="Main (mobile)" className="fixed inset-x-3 bottom-3 z-30 md:hidden">
+        <ul className="glass mx-auto flex max-w-lg justify-around rounded-3xl px-1 py-1">
           {links.map((l) => (
             <li key={l.href + l.label}>
-              <Link href={l.href} className="flex min-w-14 flex-col items-center px-2 py-1.5 text-[11px] font-semibold">
+              <Link href={l.href} className="flex min-w-14 flex-col items-center rounded-2xl px-2 py-1.5 text-[11px] font-semibold active:bg-white/50">
                 <span aria-hidden className="text-xl">
                   {l.emoji}
                 </span>

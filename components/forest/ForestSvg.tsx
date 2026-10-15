@@ -164,17 +164,20 @@ export function ForestSvg({
       </defs>
 
       <rect width={W} height={H} fill={`url(#sky-${houseId})`} />
-      <circle cx="880" cy="60" r="28" fill="#f6c445" />
+      <g className="layer-far">
+        <circle cx="880" cy="60" r="28" fill="#f6c445" />
+        <circle cx="880" cy="60" r="40" fill="#f6c445" opacity="0.18" />
+      </g>
 
       {art.hills && (
-        <g>
+        <g className="layer-mid">
           <ellipse cx="160" cy={HORIZON + 30} rx="260" ry="110" fill={mix(ground, "#4f6f55", 0.45)} />
           <ellipse cx="520" cy={HORIZON + 40} rx="300" ry="95" fill={mix(ground, "#4f6f55", 0.35)} />
           <ellipse cx="900" cy={HORIZON + 30} rx="240" ry="105" fill={mix(ground, "#4f6f55", 0.5)} />
         </g>
       )}
       {art.mist && !compact && (
-        <g fill="#ffffff" opacity="0.55">
+        <g fill="#ffffff" opacity="0.55" className="layer-mid">
           <rect x="40" y="150" width="380" height="14" rx="7" />
           <rect x="520" y="140" width="420" height="12" rx="6" />
         </g>
@@ -185,7 +188,7 @@ export function ForestSvg({
       {stageIndex >= 2 && <Water type={art.water} color={water} />}
 
       {stageIndex >= 3 && !compact && (
-        <g>
+        <g className="layer-far">
           <g transform="translate(300 70)"><SkyBird /></g>
           <g transform="translate(330 58) scale(0.8)"><SkyBird /></g>
           <g transform="translate(610 92) scale(0.9)"><SkyBird /></g>
@@ -209,6 +212,7 @@ export function ForestSvg({
         );
       })}
 
+      <g className="layer-near">
       {[...sorted.map((item) => ({ type: "item" as const, item, y: item.y })), ...smallAnimals.map((a) => ({ type: "animal" as const, a, y: a.y })), ...legends.map((a) => ({ type: "legend" as const, a, y: a.y }))]
         .sort((a, b) => a.y - b.y)
         .map((entry, i) => {
@@ -243,6 +247,7 @@ export function ForestSvg({
             </g>
           );
         })}
+      </g>
     </svg>
   );
 }

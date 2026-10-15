@@ -72,7 +72,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   // Demo mode: no real login. Start as a new student, or step into a sample account.
   const profiles = await repo.listProfiles();
   const quick = [
-    { p: profiles.find((x) => x.handle === "rahul"), why: "Saranda member with lots of trees" },
+    { p: profiles.find((x) => x.houseId === "saranda" && x.role === "member"), why: "Saranda's top ranger, with lots of trees" },
     { p: profiles.find((x) => x.role === "house_admin"), why: "House admin: approves Saranda's quests" },
     { p: profiles.find((x) => x.role === "super_admin"), why: "Organiser: manages all nine houses" },
   ].filter((q) => q.p);
@@ -96,7 +96,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             {houses.map((h) => (
               <label key={h.id} className="relative cursor-pointer">
                 <input type="radio" name="house" value={h.id} required className="peer sr-only" defaultChecked={h.id === "saranda"} />
-                <span className="flex flex-col items-center rounded-xl border-2 border-ink/25 bg-white p-2 text-center text-xs font-bold peer-checked:border-ink peer-checked:bg-leaf-soft peer-focus-visible:outline-3 peer-focus-visible:outline-sun">
+                <span className="flex flex-col items-center rounded-2xl border border-white/70 bg-white/35 p-2 text-center text-xs font-bold shadow-[0_1px_0_rgba(255,255,255,0.8)_inset] transition peer-checked:-translate-y-1 peer-checked:bg-[rgb(170_222_120/0.65)] peer-checked:shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_12px_20px_-10px_rgba(14,52,30,0.55)] peer-focus-visible:outline-3 peer-focus-visible:outline-sun">
                   <span className="text-2xl" aria-hidden>
                     {h.mascotEmoji}
                   </span>
@@ -115,7 +115,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {quick.map(({ p, why }) => (
           <form key={p!.id} action={demoLogin}>
             <input type="hidden" name="profileId" value={p!.id} />
-            <button className="flex w-full items-center justify-between gap-3 rounded-xl border-2 border-ink/25 bg-white p-3 text-left hover:border-ink" type="submit">
+            <button data-tilt className="glass flex w-full items-center justify-between gap-3 rounded-2xl p-3 text-left" type="submit">
               <span>
                 <span className="block font-bold">{p!.name}</span>
                 <span className="block text-xs text-ink/70">{why}</span>

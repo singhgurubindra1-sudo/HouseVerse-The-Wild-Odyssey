@@ -22,8 +22,8 @@ export default async function PickHousePage() {
           <li key={h.id}>
             <form action={chooseHouse} className="h-full">
               <input type="hidden" name="house" value={h.id} />
-              <button type="submit" className="card flex h-full w-full flex-col items-start gap-1 p-4 text-left transition hover:-translate-y-0.5" style={{ borderColor: h.colorPrimary }}>
-                <span className="text-4xl" aria-hidden>
+              <button type="submit" data-tilt className="card flex h-full w-full flex-col items-start gap-1 p-4 text-left" style={{ boxShadow: `inset 0 4px 0 ${h.colorPrimary}, var(--glass-shadow)` }}>
+                <span className="pop text-5xl drop-shadow-[0_8px_8px_rgba(14,52,30,0.3)]" aria-hidden>
                   {h.mascotEmoji}
                 </span>
                 <span className="text-xl font-extrabold" style={{ color: h.colorPrimary }}>

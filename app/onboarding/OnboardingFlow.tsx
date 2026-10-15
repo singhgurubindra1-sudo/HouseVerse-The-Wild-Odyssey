@@ -26,7 +26,7 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
           <p className="mb-3 text-lg italic">&ldquo;{house.motto}&rdquo;</p>
           <ul className="space-y-2">
             {house.values.map((v) => (
-              <li key={v} className="flex items-start gap-2 rounded-xl bg-leaf-soft px-3 py-2 font-semibold">
+              <li key={v} className="glass flex items-start gap-2 rounded-2xl px-3 py-2 font-semibold">
                 <span aria-hidden>🌿</span> {v}
               </li>
             ))}
@@ -43,7 +43,7 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
           <p className="mb-3">These are the people to message if you need help or have an idea for a quest.</p>
           <ul className="grid gap-3 sm:grid-cols-2">
             {house.leaders.map((l) => (
-              <li key={l.name + l.role} className="flex items-center gap-3 rounded-xl border-2 border-ink/20 bg-white p-3">
+              <li key={l.name + l.role} data-tilt className="glass flex items-center gap-3 rounded-2xl p-3">
                 <span aria-hidden className="flex size-12 items-center justify-center rounded-full border-2 border-ink/70 font-bold text-white" style={{ background: house.colorPrimary }}>
                   {initials(l.name)}
                 </span>
@@ -110,9 +110,9 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
           {question.options.map((opt, i) => {
             const answered = chosen !== undefined;
             const right = i === question.answerIndex;
-            const state = answered && right ? "border-forest bg-leaf-soft" : answered && chosen === i ? "border-[#c84a3a] bg-rose" : "border-ink/25 bg-white hover:border-ink";
+            const state = answered && right ? "border-forest bg-leaf-soft" : answered && chosen === i ? "border-[#c84a3a] bg-rose" : "border-white/70 bg-white/40";
             return (
-              <label key={opt} className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 px-4 py-3 font-semibold ${state}`}>
+              <label key={opt} className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 font-semibold shadow-[0_1px_0_rgba(255,255,255,0.8)_inset] backdrop-blur-md transition hover:-translate-y-0.5 ${state}`}>
                 <input
                   type="radio"
                   name={question.id}
@@ -167,13 +167,13 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
       </p>
       <div className="mb-4 flex gap-1.5" aria-hidden>
         {Array.from({ length: total }, (_, i) => (
-          <span key={i} className="h-2 flex-1 rounded-full transition-colors" style={{ background: i <= index ? house.colorPrimary : "#1d2a2022" }} />
+          <span key={i} className="h-2 flex-1 rounded-full border border-white/70 transition-colors" style={{ background: i <= index ? house.colorPrimary : "rgb(255 255 255 / 0.4)" }} />
         ))}
       </div>
       <section
         key={index}
-        className="card rise min-h-[22rem] p-6 sm:p-8"
-        style={{ borderColor: house.colorPrimary }}
+        className="card flip-in min-h-[22rem] p-6 sm:p-8"
+        style={{ boxShadow: `inset 0 5px 0 ${house.colorPrimary}, var(--glass-shadow)` }}
         aria-roledescription="slide"
         aria-label={`Card ${index + 1} of ${total}`}
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
@@ -185,7 +185,7 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
           if (dx > 50) go(-1);
         }}
       >
-        <p className="text-5xl" aria-hidden>
+        <p className="float inline-block text-6xl drop-shadow-[0_10px_10px_rgba(14,52,30,0.3)]" aria-hidden>
           {emoji}
         </p>
         <h1 ref={headingRef} tabIndex={-1} className="mb-4 mt-2 text-2xl font-extrabold outline-none sm:text-3xl" style={{ color: house.colorPrimary }}>
@@ -198,7 +198,8 @@ export function OnboardingFlow({ house, cards, trivia, firstName, alreadyDone }:
           ← Back
         </button>
         <span className="text-sm text-ink/60">
-          {index + 1} / {total} · swipe or use arrow keys
+          {index + 1} / {total}
+          <span className="hidden sm:inline"> · swipe or use arrow keys</span>
         </span>
         {!isFinish && (
           <button type="button" className="btn btn-primary" onClick={() => go(1)} disabled={!canNext}>

@@ -4,6 +4,7 @@ import { getRepo } from "@/lib/data";
 import { getHouseSummaries } from "@/lib/views";
 import { STAGES } from "@/lib/game";
 import { HouseCard } from "@/components/forest/HouseCard";
+import { ForestRing } from "@/components/forest/ForestRing";
 import { AutoRefresh } from "@/components/client";
 import { StatTile } from "@/components/ui";
 
@@ -19,16 +20,18 @@ export default async function LandingPage() {
   return (
     <div className="space-y-12">
       <AutoRefresh seconds={20} />
-      <section className="rise grid items-center gap-6 md:grid-cols-[1.1fr_1fr]">
-        <div>
+      <section className="rise space-y-4">
+        <div className="mx-auto max-w-3xl text-center">
           <p className="pill mb-3 bg-leaf">Saranda House Build-a-Thon &apos;26 · House Odyssey</p>
-          <h1 className="text-5xl font-black tracking-tight text-forest sm:text-6xl">Wildlands</h1>
+          <h1 className="bg-gradient-to-br from-forest-dark via-forest to-[#3aa36a] bg-clip-text text-5xl font-black tracking-tight text-transparent drop-shadow-[0_2px_0_rgba(255,255,255,0.6)] sm:text-7xl">
+            Wildlands
+          </h1>
           <p className="mt-3 text-xl font-semibold">A living house ecosystem.</p>
-          <p className="mt-3 max-w-xl text-ink/80">
+          <p className="mx-auto mt-3 max-w-xl text-ink/80">
             Every quest you finish plants a tree or brings an animal back to your house&apos;s forest. Over the semester, nine empty patches of land turn into nine living
             national parks, and everyone can see exactly who helped them grow.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             {user?.houseId ? (
               <Link href={`/house/${user.houseId}`} className="btn btn-primary">
                 🌳 Go to my forest
@@ -43,12 +46,25 @@ export default async function LandingPage() {
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <StatTile emoji="🌳" label="Trees planted this week" value={stats.treesThisWeek} />
-          <StatTile emoji="✅" label="Quests completed" value={stats.questsCompleted} />
-          <StatTile emoji="🔥" label="Most active house" value={mostActive ? `${mostActive.mascotEmoji} ${mostActive.name}` : "—"} />
-          <StatTile emoji="🧑‍🤝‍🧑" label="Rangers" value={stats.members} />
-        </div>
+        <ForestRing
+          houses={panorama.map((s) => ({
+            id: s.house.id,
+            name: s.house.name,
+            emoji: s.house.mascotEmoji,
+            color: s.house.colorPrimary,
+            seeds: s.house.totalSeeds,
+            stageIndex: s.stageIndex,
+            wilting: s.wilting,
+            items: s.items,
+          }))}
+        />
+      </section>
+
+      <section aria-label="Live numbers" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatTile emoji="🌳" label="Trees planted this week" value={stats.treesThisWeek} />
+        <StatTile emoji="✅" label="Quests completed" value={stats.questsCompleted} />
+        <StatTile emoji="🔥" label="Most active house" value={mostActive ? `${mostActive.mascotEmoji} ${mostActive.name}` : "—"} />
+        <StatTile emoji="🧑‍🤝‍🧑" label="Rangers" value={stats.members} />
       </section>
 
       <section aria-labelledby="panorama">
@@ -79,8 +95,8 @@ export default async function LandingPage() {
           ["🌳", "Watch it grow", "Every approved quest plants something with your name on it. Tap any tree to see who planted it."],
           ["🪪", "Show it off", "Your Habitat Card collects your badges and contributions. Share it anywhere."],
         ].map(([emoji, title, body]) => (
-          <div key={title} className="card bg-leaf-soft p-4">
-            <p className="text-2xl" aria-hidden>
+          <div key={title} data-tilt className="card p-4">
+            <p className="pop text-3xl" aria-hidden>
               {emoji}
             </p>
             <h3 className="mt-1 font-extrabold">{title}</h3>
@@ -95,8 +111,8 @@ export default async function LandingPage() {
         </h2>
         <ol className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           {STAGES.map((s) => (
-            <li key={s.key} className="rounded-xl border-2 border-ink/20 bg-cream p-3 text-center">
-              <p className="text-3xl" aria-hidden>
+            <li key={s.key} data-tilt="12" className="glass rounded-2xl p-3 text-center">
+              <p className="pop text-3xl" aria-hidden>
                 {s.emoji}
               </p>
               <p className="font-bold">{s.name}</p>

@@ -15,7 +15,7 @@ export function PageHeader({ eyebrow, title, children, back }: { eyebrow?: strin
       {eyebrow && <p className="pill mb-2 bg-leaf">{eyebrow}</p>}
       <h1 className="text-3xl font-extrabold tracking-tight text-forest sm:text-4xl">{title}</h1>
       {children && <div className="mt-2 max-w-2xl text-ink/75">{children}</div>}
-      <div className="mt-4 h-1 w-full rounded bg-leaf/70" />
+      <div className="mt-4 h-px w-full bg-gradient-to-r from-white via-white/70 to-transparent" />
     </header>
   );
 }
@@ -23,8 +23,11 @@ export function PageHeader({ eyebrow, title, children, back }: { eyebrow?: strin
 export function ProgressBar({ value, color = "var(--color-forest)", label }: { value: number; color?: string; label: string }) {
   const pct = Math.round(Math.max(0, Math.min(1, value)) * 100);
   return (
-    <div role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} className="h-4 w-full overflow-hidden rounded-full border-2 border-ink/80 bg-white">
-      <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${pct}%`, background: color }} />
+    <div role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} className="h-4 w-full overflow-hidden rounded-full border border-white/80 bg-white/40 shadow-[inset_0_2px_4px_rgba(14,52,30,0.18)]">
+      <div
+        className="h-full rounded-full transition-[width] duration-700"
+        style={{ width: `${pct}%`, background: `linear-gradient(180deg, rgb(255 255 255 / 0.45), rgb(255 255 255 / 0) 55%), ${color}`, boxShadow: "0 0 12px -2px " + color }}
+      />
     </div>
   );
 }
@@ -32,12 +35,12 @@ export function ProgressBar({ value, color = "var(--color-forest)", label }: { v
 export function Avatar({ profile, size = 40 }: { profile: Pick<Profile, "name" | "avatarUrl">; size?: number }) {
   if (profile.avatarUrl) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={profile.avatarUrl} alt="" width={size} height={size} className="shrink-0 rounded-full border-2 border-ink/80 object-cover" style={{ width: size, height: size }} />;
+    return <img src={profile.avatarUrl} alt="" width={size} height={size} className="shrink-0 rounded-full border border-white/80 object-cover shadow-md" style={{ width: size, height: size }} />;
   }
   return (
     <span
       aria-hidden
-      className="inline-flex shrink-0 items-center justify-center rounded-full border-2 border-ink/80 bg-leaf font-bold text-ink"
+      className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/80 bg-gradient-to-br from-[#c6ecaa] to-[#7cc35b] font-bold text-ink shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_4px_10px_-4px_rgba(14,52,30,0.5)]"
       style={{ width: size, height: size, fontSize: size * 0.38 }}
     >
       {initials(profile.name)}
@@ -60,8 +63,8 @@ export function RankTitle({ seeds }: { seeds: number }) {
 
 export function BadgeTile({ badge, earned, earnedAt }: { badge: Badge; earned: boolean; earnedAt?: string }) {
   return (
-    <div className={`card flex items-start gap-3 p-3 ${earned ? "" : "opacity-45 grayscale"}`} title={earnedAt ? `Earned ${new Date(earnedAt).toLocaleDateString()}` : undefined}>
-      <span className="text-2xl" aria-hidden>
+    <div data-tilt="14" className={`card flex items-start gap-3 p-3 ${earned ? "" : "opacity-45 grayscale"}`} title={earnedAt ? `Earned ${new Date(earnedAt).toLocaleDateString()}` : undefined}>
+      <span className={`text-3xl ${earned ? "pop drop-shadow-[0_6px_6px_rgba(14,52,30,0.35)]" : ""}`} aria-hidden>
         {badge.icon}
       </span>
       <div>
@@ -77,11 +80,11 @@ export function BadgeTile({ badge, earned, earnedAt }: { badge: Badge; earned: b
 
 export function StatTile({ label, value, emoji }: { label: string; value: ReactNode; emoji: string }) {
   return (
-    <div className="card p-4">
+    <div data-tilt className="card p-4">
       <p className="text-sm font-semibold text-ink/70">
         <span aria-hidden>{emoji}</span> {label}
       </p>
-      <p className="mt-1 text-2xl font-extrabold text-forest">{value}</p>
+      <p className="pop-sm mt-1 text-2xl font-extrabold text-forest">{value}</p>
     </div>
   );
 }
@@ -106,7 +109,7 @@ export function Notice({ tone = "info", children }: { tone?: "info" | "success" 
     warn: "bg-[#fff1c9]",
   }[tone];
   return (
-    <div role={tone === "error" ? "alert" : "status"} className={`rounded-xl border-2 border-ink/70 px-4 py-3 text-sm ${styles}`}>
+    <div role={tone === "error" ? "alert" : "status"} className={`rounded-2xl border border-white/75 px-4 py-3 text-sm shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_10px_24px_-14px_rgba(14,52,30,0.45)] backdrop-blur-xl ${styles}`}>
       {children}
     </div>
   );

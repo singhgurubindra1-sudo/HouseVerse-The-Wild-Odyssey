@@ -29,7 +29,9 @@ export function ForestScene({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-2xl border-2 border-ink/80 shadow-[0_4px_0_rgba(0,0,0,0.15)]">
+      <div className="diorama">
+        <div className="diorama-stage">
+          <div className="diorama-window">
         <ForestSvg
           houseId={houseId}
           houseName={houseName}
@@ -41,8 +43,12 @@ export function ForestScene({
           onSelect={setSelectedId}
           className="block h-auto w-full aspect-[1000/420] min-h-[220px]"
         />
+          </div>
+          <div className="diorama-soil" aria-hidden />
+        </div>
+        <div className="diorama-shadow" aria-hidden />
       </div>
-      <div aria-live="polite" className="mt-3 min-h-[3.5rem] rounded-xl border border-forest/20 bg-white/70 px-4 py-3 text-sm">
+      <div aria-live="polite" className="glass mt-2 min-h-[3.5rem] rounded-2xl px-4 py-3 text-sm">
         {selected ? (
           <p>
             <span className="mr-1 text-lg" aria-hidden>

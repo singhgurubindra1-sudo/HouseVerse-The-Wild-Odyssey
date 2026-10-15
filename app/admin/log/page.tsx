@@ -33,7 +33,7 @@ export default async function ActivityLogPage() {
         <div className="card overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
             <caption className="sr-only">Admin activity, newest first</caption>
-            <thead className="bg-forest text-white">
+            <thead className="glass-head">
               <tr>
                 <th scope="col" className="px-4 py-2.5">When</th>
                 <th scope="col" className="px-4 py-2.5">Who</th>
@@ -43,7 +43,7 @@ export default async function ActivityLogPage() {
             </thead>
             <tbody>
               {entries.map((e) => (
-                <tr key={e.id} className="border-t border-ink/10 odd:bg-white even:bg-cream">
+                <tr key={e.id} className="glass-row border-t border-white/40">
                   <td className="whitespace-nowrap px-4 py-2 text-ink/70">
                     {new Date(e.createdAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                   </td>

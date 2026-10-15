@@ -19,7 +19,7 @@ export default async function WildlandsPage() {
       <div className="card mb-8 overflow-x-auto">
         <table className="w-full min-w-[560px] text-left text-sm">
           <caption className="sr-only">House rankings by Seeds</caption>
-          <thead className="bg-forest text-white">
+          <thead className="glass-head">
             <tr>
               <th scope="col" className="px-4 py-3">#</th>
               <th scope="col" className="px-4 py-3">House</th>
@@ -31,7 +31,7 @@ export default async function WildlandsPage() {
           </thead>
           <tbody>
             {summaries.map((s, i) => (
-              <tr key={s.house.id} className="border-t border-ink/10 odd:bg-white even:bg-cream">
+              <tr key={s.house.id} className="glass-row border-t border-white/40">
                 <td className="px-4 py-2.5 font-bold">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}</td>
                 <td className="px-4 py-2.5">
                   <Link href={`/house/${s.house.id}`} className="font-bold hover:underline" style={{ color: s.house.colorPrimary }}>

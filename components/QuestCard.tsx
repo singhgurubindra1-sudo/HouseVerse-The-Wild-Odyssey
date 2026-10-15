@@ -13,7 +13,7 @@ const STATUS: Record<SubmissionStatus, { label: string; cls: string }> = {
 export function QuestCard({ quest, done, status, houseName }: { quest: Quest; done: number; status?: SubmissionStatus; houseName?: string }) {
   const meta = TRACK_META[quest.track];
   return (
-    <Link href={`/quests/${quest.id}`} className="card flex h-full flex-col gap-2 p-4 transition hover:-translate-y-0.5" style={{ borderLeftWidth: 8, borderLeftColor: meta.color }}>
+    <Link href={`/quests/${quest.id}`} data-tilt className="card flex h-full flex-col gap-2 overflow-hidden p-4" style={{ boxShadow: `inset 6px 0 0 ${meta.color}cc, var(--glass-shadow)` }}>
       <div className="flex items-start justify-between gap-2">
         <TrackPill track={quest.track} />
         <span className="pill bg-leaf text-sm">+{quest.seeds} 🌰</span>

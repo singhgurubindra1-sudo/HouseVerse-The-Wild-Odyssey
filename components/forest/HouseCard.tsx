@@ -9,13 +9,13 @@ export function HouseCard({ summary, rank }: { summary: HouseSummary; rank?: num
   const stage = STAGES[stageIndex];
   const next = nextStage(house.totalSeeds);
   return (
-    <Link href={`/house/${house.id}`} className="card group block overflow-hidden transition hover:-translate-y-0.5" aria-label={`${house.name}: ${stage.name}, ${house.totalSeeds} Seeds`}>
-      <div className="relative">
+    <Link href={`/house/${house.id}`} data-tilt className="card group block overflow-hidden" aria-label={`${house.name}: ${stage.name}, ${house.totalSeeds} Seeds`}>
+      <div className="relative overflow-hidden rounded-t-[1.5rem]">
         <ForestSvg houseId={house.id} houseName={house.name} items={items} stageIndex={stageIndex} wilting={wilting} compact className="block aspect-[1000/420] w-full" />
         {rank !== undefined && <span className="pill absolute left-2 top-2 bg-sun">#{rank}</span>}
         {wilting && <span className="pill absolute right-2 top-2 bg-rose">🥀 needs rangers</span>}
       </div>
-      <div className="border-t-2 border-ink/80 p-3" style={{ borderTopColor: house.colorPrimary }}>
+      <div className="border-t border-white/70 p-3">
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-lg font-extrabold" style={{ color: house.colorPrimary }}>
             <span aria-hidden>{house.mascotEmoji}</span> {house.name}
