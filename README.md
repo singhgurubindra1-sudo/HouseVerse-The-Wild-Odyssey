@@ -30,7 +30,8 @@ Saranda (elephant herd), Gir (Asiatic lions), Kanha (barasingha), Bandipur (tige
 ## Tech and architecture
 
 - **Next.js 15 App Router** + TypeScript. Pages load their data in **server components**; every button that changes data is a **server action** (`app/actions/*`).
-- **Tailwind CSS 4** for styling. Mobile-first with a bottom tab bar on phones.
+- **Tailwind CSS 4** for styling, with a **liquid glass** design system in `app/globals.css`: frosted, translucent panels over a drifting aurora backdrop. Mobile-first, with a floating glass dock on phones.
+- **3D interface** with plain CSS 3D transforms, no 3D library: a rotating ring of all nine forests on the landing page (`components/forest/ForestRing.tsx`), each house forest shown as a tilting diorama with parallax layers, and cards that lean toward the pointer (`components/TiltEffects.tsx`). Tilt is off on touch screens, and all motion stops when the device asks for reduced motion.
 - **Supabase**: Postgres database, login (email/password and Google), file storage for proof photos.
 - **Row Level Security** in the database: members can only change their own name/photo and submit their own proofs; Seeds, roles and approvals can only change through database functions that check who you are. House admins can only manage their own house.
 - **Approve is one transaction**: `review_submissions()` in `supabase/schema.sql` marks the submission approved, adds Seeds to the member and house, plants a forest item, awards badges and writes the activity log, all together or not at all.
@@ -43,10 +44,11 @@ Saranda (elephant herd), Gir (Asiatic lions), Kanha (barasingha), Bandipur (tige
 app/            pages (App Router) and server actions
   admin/        Admin Control Room
   actions/      server actions: auth, member, admin
-components/     shared building blocks (forest art, cards, forms)
+components/     shared building blocks (forest art, 3D ring, tilt, cards, forms)
 lib/            game rules, house data, seed data, data layer, auth
 supabase/       schema.sql (tables, security rules, functions) and seed.sql
 scripts/        generate-seed-sql.ts (rebuilds seed.sql from lib/seed.ts)
+presentation/   hackathon slide deck (PowerPoint, with speaker notes)
 ```
 
 ## Run it on your computer
@@ -60,9 +62,13 @@ npm run dev
 
 Open http://localhost:3000. With no Supabase keys it runs in **demo mode**: 9 houses, 30 members, 20 quests and ~200 forest items. On the login page you can start as a new student or jump into a sample account:
 
-- **Rahul Verma**: Saranda member
+- **Saranda's top ranger**: a member with lots of trees
 - **Saranda House Admin**: approves Saranda's quests
 - **Programme Organiser**: super admin for all houses
+
+### Running in GitHub Codespaces or Gitpod
+
+Cloud editors show the site at a different address than the server sees, which Next.js normally treats as a forged form. `next.config.ts` allows `*.github.dev` and `*.gitpod.io`, so forms work there. If you ever see **"Invalid Server Actions request"**, your copy is out of date: run `git pull`, stop the site with **Ctrl + C**, and start it again with `npm run dev`.
 
 ## Put it online (Vercel + Supabase)
 
@@ -107,6 +113,33 @@ Tip: open the admin and the member in two windows side by side. The house page r
 - *Will it scale?* Supabase is a real Postgres database; Vercel serves pages from servers worldwide.
 - *How is data kept safe?* Row Level Security in the database means members can only change their own data, even if someone tampers with the website.
 - *Could a house actually use this?* Yes: it's live, free to run, and organisers manage it without code.
+
+## Build notes
+
+How it was built and tested, in the order of the Wildlands A-to-Z guide:
+
+1. **Skeleton**: Next.js 15 App Router with TypeScript and Tailwind CSS 4.
+2. **Database**: `supabase/schema.sql` creates the 10 tables (houses, profiles, quests, submissions, forest_items, badges, member_badges, lore_cards, trivia_questions, activity_log), the Row Level Security rules and the game functions. `seed.sql` is generated from `lib/seed.ts`, so demo mode and Supabase share exactly the same sample data.
+3. **Login and pick a house**: email/password and Google through Supabase Auth. In demo mode, a cookie remembers which sample account you are using.
+4. **House forest**: an SVG scene drawn from the `forest_items` rows. The scenery changes with the growth stage, and the forest wilts after 7 days without an approved quest.
+5. **Questboard and proof**: photo uploads go to Supabase Storage (`proofs` bucket). In demo mode they are kept in memory.
+6. **Approval queue**: one database function, `review_submissions()`, does all five approve steps as a single transaction.
+7. **Onboarding, profile and badges**: badge rules are evaluated in TypeScript for demo mode (`lib/game.ts`) and in SQL for Supabase (`award_earned_badges()`).
+8. **Rest of admin**: quest editor, badges, lore and trivia editor, members, activity log, overview.
+9. **Polish**: liquid glass theme, 3D ring, diorama and tilt, phone dock, keyboard and screen-reader support, and reduced-motion support.
+
+**How it was tested**
+- `npm run build` passes with no type errors.
+- `schema.sql` and `seed.sql` were loaded into a real PostgreSQL 16 database. The security rules were then checked as a member, a house admin, a super admin and a logged-out visitor:
+  - a member can't change their own Seeds or role, approve their own proof, or submit for another house;
+  - a house admin can't approve or reward another house's members, or create quests for all houses;
+  - approving correctly adds Seeds, plants the tree, awards badges and writes the log.
+- A headless browser runs the full demo loop on phone and desktop sizes: a new student signs up and finishes onboarding, an admin creates a quest, the student submits proof, the admin approves it, and the tree appears with the student's name.
+
+**Known limits**
+- Demo mode keeps data in server memory. It resets on restart and can differ between servers on Vercel, so connect Supabase for the live site.
+- House colours and leader names are placeholders to replace with each house's real details (*Admin → House lore*).
+- New rule-based badges created in Supabase mode are awarded at each member's next approval, not straight away.
 
 ## Useful commands
 
